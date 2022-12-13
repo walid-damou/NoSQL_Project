@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template , request, request
 from pymongo import MongoClient
 
 app = Flask(__name__)
@@ -13,8 +13,7 @@ utilisateurs = db.utilisateurs
 
 # produits.find_one()
 # print(produits.find_one())
-print(produits.aggregate([{'$lookup':{'from':'categorie','localField':'idCategorie','foreignField':'idCategorie','as':'Categorie'}}]))
-print("------------------Done-------------------")
+# print("------------------Done-------------------")
 # ----------------------------/Connexion avec MongoDB--------------------------------#
 
 # ----------------------------Login--------------------------------#
@@ -38,13 +37,35 @@ def Home():
 # ----------------------------ADD Prod --------------------------------#
 
 
-@app.route("/addProduct")
+@app.route("/addProduct" , methods=['POST'])
 def AddProd():
-    return render_template("addProduct.html", title="Ajouter produit")
+    # if request.method=="POST":
+    #     libelle = request.form.get("libelle")
+    #     prix = request.form.get("prix")
+    #     dateachat = request.form.get("dateachat")
+    #     #get categorie id
+    #     categorieName = request.form.get("categorie")
+    #     print("--------")
+    #     idCategorie = categorie.find_one({'denomination':categorieName})['idCategorie']
 
-# ----------------------------/ADD Prod--------------------------------#
+    #     # save picture
+    #     img = request.files["img"]
+    #     img_name = img.filename
+    #     img.save('./static/images/'+img_name)
 
-# ----------------------------Update Prod--------------------------------#
+    #     newProd ={
+    #                 "libelle": libelle,
+    #                 "prixUnitaire": prix,
+    #                 "dateAchat": dateachat,
+    #                 "photoProduit": img_name,
+    #                 "idCategorie": idCategorie
+    #             }
+
+    #     x = produits.insert_one(newProd)
+        
+    return render_template("addProduct.html",title="Ajouter produit")
+
+# ----------------------------/Update Prod--------------------------------#
 @app.route("/updateProduct/<ref>",methods=["POST","GET"])
 def UpdateProd(ref):
     if request.method=="POST":
@@ -61,9 +82,6 @@ def UpdateProd(ref):
         for i in prd:
             theProduct=i
         return render_template("updateProduct.html", title="Modifier produit",produit=theProduct,categorieslist=categories_list)
-
-# ----------------------------/Update Prod--------------------------------#
-
 # ----------------------------/Delete Prod--------------------------------#
 
 @app.route('/deleteProduct/<ref>')
