@@ -11,8 +11,6 @@ produits = db.produits
 categorie = db.categorie
 utilisateurs = db.utilisateurs
 
-# produits.find_one()
-# print(produits.find_one())
 # print("------------------Done-------------------")
 # ----------------------------/Connexion avec MongoDB--------------------------------#
 
@@ -37,33 +35,33 @@ def Home():
 # ----------------------------ADD Prod --------------------------------#
 
 
-@app.route("/addProduct" , methods=['POST'])
+@app.route("/addProduct" , methods=['POST',"GET"])
 def AddProd():
-    # if request.method=="POST":
-    #     libelle = request.form.get("libelle")
-    #     prix = request.form.get("prix")
-    #     dateachat = request.form.get("dateachat")
-    #     #get categorie id
-    #     categorieName = request.form.get("categorie")
-    #     print("--------")
-    #     idCategorie = categorie.find_one({'denomination':categorieName})['idCategorie']
+    categories_list=db.categorie.find()
+    if request.method=="POST":
+        reference = produits.count_documents({})+1
+        libelle = request.form.get("libelle")
+        prix = request.form.get("prix")
+        dateachat = request.form.get("dateachat")
+        idCategorie = request.form.get("categorie")
 
-    #     # save picture
-    #     img = request.files["img"]
-    #     img_name = img.filename
-    #     img.save('./static/images/'+img_name)
+        # save picture
+        img = request.files["img"]
+        img_name = img.filename
+        img.save('./static/images/'+img_name)
 
-    #     newProd ={
-    #                 "libelle": libelle,
-    #                 "prixUnitaire": prix,
-    #                 "dateAchat": dateachat,
-    #                 "photoProduit": img_name,
-    #                 "idCategorie": idCategorie
-    #             }
+        newProd ={
+                    "reference" : reference,
+                    "libelle": libelle,
+                    "prixUnitaire": prix,
+                    "dateAchat": dateachat,
+                    "photoProduit": img_name,
+                    "idCategorie": idCategorie
+                }
 
-    #     x = produits.insert_one(newProd)
+        x = produits.insert_one(newProd)
         
-    return render_template("addProduct.html",title="Ajouter produit")
+    return render_template("addProduct.html",title="Ajouter produit" , categoriesList=categories_list)
 
 # ----------------------------/Update Prod--------------------------------#
 @app.route("/updateProduct/<ref>",methods=["POST","GET"])
