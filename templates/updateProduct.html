@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block main %}
+ <!-- ______________________________________ -->
+ <div class="flex justify-center mt-5">
+        <h1 class="font-bold text-3xl">Modifier produit</h1>
+    </div>
+ <!-- ______________________________________ -->
+
+<div class="flex flex-col items-center mt-10 px-6 mx-auto md:h-screen lg:py-0">
+    <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 ">
+        <div class="space-y-4 md:space-y-6 sm:p-8">
+            <form action="./includes/updateProduct_inc.php" method="POST">
+                <div class="grid gap-6 mb-6 md:grid-cols-2">
+                    <div>
+                        <label for="libelle" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Libelle</label>
+                        <input type="text" id="libelle" name="libelle" value="" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"  >
+                    </div>
+                    <div>
+                        <label for="prix" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Prix unitaire</label>
+                        <input type="number" id="prix" name="prix" value="" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" >
+                    </div>
+                    <div>
+                        <label for="dateachat" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date d'achat</label>
+                        <input type="date" id="dateachat" name="dateachat" value="" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" >
+                    </div>
+                    <div>
+                        <label for="categorie" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Categorie</label>
+                        <input type="number" id="categorie" name="categorie" value="" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" >
+                    </div>
+
+                </div>
+                <input type="hidden"  name="ref" value="" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" >
+
+                <button type="submit" name="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Modifier</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

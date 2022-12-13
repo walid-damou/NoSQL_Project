@@ -5,7 +5,7 @@ app = Flask(__name__)
 #----------------------------Login--------------------------------#
 
 @app.route("/")
-def login():
+def Login():
     return render_template("login.html")
 
 #----------------------------/Login--------------------------------#
@@ -13,23 +13,26 @@ def login():
 #----------------------------HOME--------------------------------#
 
 @app.route("/home")
-def home():
-    return render_template("index.html")
+def Home():
+    return render_template("index.html",title="Acceuil")
 
 #----------------------------/HOME--------------------------------#
 
 #----------------------------ADD Prod--------------------------------#
 
-@app.route("/addProduit")
+@app.route("/addProduct")
 def AddProd():
-    return render_template("addProduct.html")
+    return render_template("addProduct.html",title="Ajouter produit")
 
 #----------------------------/ADD Prod--------------------------------#
 
 #----------------------------Update Prod--------------------------------#
 
-@app.route("/addProduit")
+@app.route("/updateProduct")
 def UpdateProd():
-    return render_template("updateProduct.html")
+    return render_template("updateProduct.html",title="Modifier produit")
 
 #----------------------------/Update Prod--------------------------------#
+
+if __name__ == "__main__":
+    app.run(debug=True)

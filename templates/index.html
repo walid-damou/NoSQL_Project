@@ -1,0 +1,68 @@
+ {% extends 'base.html' %} {% block main %}
+<!-- ______________________________________ -->
+<div class="flex justify-center mt-10">
+    <h1 class="font-bold text-4xl">Welcome, test</h1>
+</div>
+<!-- ______________________________________ -->
+<div class="container mx-auto mt-10">
+    <h5 class="text-md leading-tight tracking-tight text-red-500 md:text-xl">
+
+        <h1 class="font-semibold text-2xl my-10">Produits : </h1>
+        <div class="overflow-x-auto relative">
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="py-3 px-6">
+                            Reference
+                        </th>
+                        <th scope="col" class="py-3 px-6">
+                            Libelle
+                        </th>
+                        <th scope="col" class="py-3 px-6">
+                            Prix Unitaire
+                        </th>
+                        <th scope="col" class="py-3 px-6">
+                            Date achat
+                        </th>
+                        <th scope="col" class="py-3 px-6">
+                            Photo Produit
+                        </th>
+                        <th scope="col" class="py-3 px-6">
+                            Categorie
+                        </th>
+                        <th scope="col" class="py-3 px-6">
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            ref </th>
+                        <td class="py-4 px-6">
+                            libelle </td>
+                        <td class="py-4 px-4">
+                            prix </td>
+                        <td class="py-4 px-4">
+                            date </td>
+                        <td class="py-4 px-4">
+                            img </td>
+                        <td class="py-4 px-6">
+                            categ
+                        </td>
+                        <td class="py-4 px-6 flex space-x-2">
+                            <a href="{{ url_for('UpdateProd')}}" class="font-medium text-blue-600 text-blue-500 border-2 border-blue-500 rounded-sm p-1 hover:text-white hover:bg-blue-500"><i class="fa-regular fa-pen-to-square"></i></a>
+                            <a href="#" class="font-medium text-red-600 text-red-500 border-2 border-red-500 rounded-sm p-1 hover:text-white hover:bg-red-500"><i class="fa-solid fa-trash"></i></a>
+                        </td>
+                    </tr>
+
+
+
+
+                </tbody>
+            </table>
+        </div>
+</div>
+{% endblock %}
