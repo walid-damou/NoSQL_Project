@@ -1,4 +1,4 @@
-from flask import Flask , render_template
+from flask import Flask , render_template , request
 from pymongo import MongoClient
 
 app = Flask(__name__)
@@ -10,10 +10,7 @@ db = client.gestionProduits #database gestionProduits
 produits = db.produits 
 categorie = db.categorie 
 utilisateurs = db.utilisateurs 
-
-produits.find_one()
-print(produits.find_one())
-print("------------------Done-------------------")
+print("------------------connected-------------------")
 #----------------------------/Connexion avec MongoDB--------------------------------#
 
 #----------------------------Login--------------------------------#
@@ -34,8 +31,32 @@ def Home():
 
 #----------------------------ADD Prod --------------------------------#
 
-@app.route("/addProduct")
+@app.route("/addProduct" , methods=['POST'])
 def AddProd():
+    # if request.method=="POST":
+    #     libelle = request.form.get("libelle")
+    #     prix = request.form.get("prix")
+    #     dateachat = request.form.get("dateachat")
+    #     #get categorie id
+    #     categorieName = request.form.get("categorie")
+    #     print("--------")
+    #     idCategorie = categorie.find_one({'denomination':categorieName})['idCategorie']
+
+    #     # save picture
+    #     img = request.files["img"]
+    #     img_name = img.filename
+    #     img.save('./static/images/'+img_name)
+
+    #     newProd ={
+    #                 "libelle": libelle,
+    #                 "prixUnitaire": prix,
+    #                 "dateAchat": dateachat,
+    #                 "photoProduit": img_name,
+    #                 "idCategorie": idCategorie
+    #             }
+
+    #     x = produits.insert_one(newProd)
+        
     return render_template("addProduct.html",title="Ajouter produit")
 
 #----------------------------/ADD Prod--------------------------------#
