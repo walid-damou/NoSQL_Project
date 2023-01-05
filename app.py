@@ -12,7 +12,7 @@ categorie = db.categorie
 utilisateurs = db.utilisateurs
 
 # produits.find_one()
-# print(produits.find_one())
+# print(categories.find_one({'idCategorie':1}))
 # print("------------------Done-------------------")
 # ----------------------------/Connexion avec MongoDB--------------------------------#
 
