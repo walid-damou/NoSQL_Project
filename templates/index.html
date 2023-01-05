@@ -60,7 +60,7 @@
                             <img src="{{ url_for('static', filename='images/' + produit.photoProduit) }}" width="140px" />
                         </td>
                         <td class="py-4 px-6">
-                          {{produit.Categorie.0.denomination}}
+                          {{produit.Categorie['denomination']}}
                         </td>
                         <td class="py-4 px-6 flex space-x-2">
                             <a href="{{ url_for('UpdateProd',ref=produit.reference)}}" class="font-medium text-blue-600 text-blue-500 border-2 border-blue-500 rounded-sm p-1 hover:text-white hover:bg-blue-500"><i class="fa-regular fa-pen-to-square"></i></a>

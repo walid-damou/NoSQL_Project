@@ -1,4 +1,4 @@
-from flask import Flask, render_template , request, request, session, redirect, url_for
+from flask import Flask, render_template, request, request, session, redirect, url_for
 from pymongo import MongoClient
 import os
 
@@ -27,7 +27,7 @@ utilisateurs = db.utilisateurs
 # ----------------------------Login--------------------------------#
 
 
-@app.route("/", methods= ['POST', 'GET'])
+@app.route("/", methods=['POST', 'GET'])
 def Login():
     if "username" in session:
         return redirect(url_for("Home"))
@@ -42,25 +42,30 @@ def Login():
                 session["username"]=user_val
                 return redirect(url_for("Home"))
     return render_template('login.html')
-        
+    
+
 
 # ----------------------------/Logout--------------------------------#
 
-@app.route("/logout", methods= ['POST', 'GET'])
+@app.route("/logout")
 def Logout():
-    if "username" in session:
-        session.pop("username", None)
-        return render_template("login.html")
-    else:
-        return render_template("index.html")
+    session.pop('username', None)
+    return redirect(url_for('Home'))
 
 
 # ----------------------------HOME--------------------------------#
 
 @app.route("/home")
 def Home():
-    all_produits=produits.aggregate([{'$lookup':{'from':'categorie','localField':'idCategorie','foreignField':'idCategorie','as':'Categorie'}}])
-    return render_template("index.html", title="Acceuil", produits=all_produits)
+
+    if 'username' in session:
+        username = session['username']
+        all_produits=produits.aggregate([{'$lookup':{'from':'categorie','localField':'idCategorie','foreignField':'idCategorie','as':'Categorie'}},{'$addFields':{'Categorie':{'$arrayElemAt':["$Categorie",0]}}}])
+        return render_template("index.html", title="Acceuil", produits=all_produits)
+    else:
+        return redirect(url_for('Login'))
+
+    
 
 # ----------------------------/HOME--------------------------------#
 
@@ -88,7 +93,7 @@ def AddProd():
                     "prixUnitaire": prix,
                     "dateAchat": dateachat,
                     "photoProduit": img_name,
-                    "idCategorie": idCategorie
+                    "idCategorie": int(idCategorie)
                 }
 
         x = produits.insert_one(newProd)
