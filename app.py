@@ -1,12 +1,31 @@
+from unittest import result
 from flask import Flask, render_template , request, request, session, redirect, url_for
 from pymongo import MongoClient
 import os
 
 app = Flask(__name__)
 # ----------------------------Connexion avec MongoDB--------------------------------#
-client = MongoClient()
+
+#                       si on'a mode avec authentification 
+
+# client = MongoClient('localhost',
+#                      27017,
+#                      username='user',
+#                      password='password',
+#                      authSource='the_database')
+
+
+#                            mode sans authentification 
+
 client = MongoClient('localhost', 27017)  # 27017 port
 db = client.get_database('gestionProduits')  # database gestionProduits
+
+produits = db.produits
+categorie = db.categorie
+utilisateurs = db.utilisateurs
+
+# -------------------------------Done-----------------------------------------------#
+
 SESSION_TYPE = "redis"
 PERMANENT_SESSION_LIFETIME = 1800
 
@@ -15,11 +34,9 @@ app.config.update(SECRET_KEY=os.urandom(24))
 app.config.from_object(__name__)
 
 
-produits = db.produits
-categorie = db.categorie
-utilisateurs = db.utilisateurs
 
-# print("------------------Done-------------------")
+
+
 # ----------------------------/Connexion avec MongoDB--------------------------------#
 
 # ----------------------------Login--------------------------------#
@@ -44,21 +61,23 @@ def Login():
 
 # ----------------------------/Logout--------------------------------#
 
-@app.route("/logout", methods= ['POST', 'GET'])
+@app.route("/logout")
 def Logout():
-    if "username" in session:
-        session.pop("username", None)
-        return render_template("login.html")
-    else:
-        return render_template("index.html")
+    session.pop('username', None)
+    return redirect(url_for('Home'))
 
 
 # ----------------------------HOME--------------------------------#
 
 @app.route("/home")
 def Home():
-    all_produits=produits.aggregate([{'$lookup':{'from':'categorie','localField':'idCategorie','foreignField':'idCategorie','as':'Categorie'}}])
-    return render_template("index.html", title="Acceuil", produits=all_produits)
+
+    if 'username' in session:
+        username = session['username']
+        all_produits=produits.aggregate([{'$lookup':{'from':'categorie','localField':'idCategorie','foreignField':'idCategorie','as':'Categorie'}},{'$addFields':{'Categorie':{'$arrayElemAt':["$Categorie",0]}}}])
+        return render_template("index.html", title="Acceuil", produits=all_produits)
+    else:
+        return redirect(url_for('Login'))
 
 # ----------------------------/HOME--------------------------------#
 
@@ -67,6 +86,7 @@ def Home():
 
 @app.route("/addProduct" , methods=['POST',"GET"])
 def AddProd():
+    session["AddProd"]=False
     categories_list=db.categorie.find()
     if request.method=="POST":
         reference = produits.count_documents({})+1
@@ -86,10 +106,11 @@ def AddProd():
                     "prixUnitaire": prix,
                     "dateAchat": dateachat,
                     "photoProduit": img_name,
-                    "idCategorie": idCategorie
+                    "idCategorie": int(idCategorie)
                 }
 
         x = produits.insert_one(newProd)
+        session["AddProd"]=True
         
     return render_template("addProduct.html",title="Ajouter produit" , categoriesList=categories_list)
 
