@@ -1,11 +1,19 @@
-from flask import Flask, render_template , request, request
+from flask import Flask, render_template , request, request, session, redirect, url_for
 from pymongo import MongoClient
+import os
 
 app = Flask(__name__)
 # ----------------------------Connexion avec MongoDB--------------------------------#
 client = MongoClient()
 client = MongoClient('localhost', 27017)  # 27017 port
-db = client.gestionProduits  # database gestionProduits
+db = client.get_database('gestionProduits')  # database gestionProduits
+SESSION_TYPE = "redis"
+PERMANENT_SESSION_LIFETIME = 1800
+
+app.config.update(SECRET_KEY=os.urandom(24))
+
+app.config.from_object(__name__)
+
 
 produits = db.produits
 categorie = db.categorie
@@ -19,11 +27,33 @@ utilisateurs = db.utilisateurs
 # ----------------------------Login--------------------------------#
 
 
-@app.route("/")
+@app.route("/", methods= ['POST', 'GET'])
 def Login():
-    return render_template("login.html")
+    if "username" in session:
+        return redirect(url_for("Home"))
+    if request.method == "POST":
+        user=request.form.get("username")
+        password=request.form.get("password")
+        user_found=utilisateurs.find_one({"username":user})
+        if user_found:
+            user_val=user_found["username"]
+            password_check=user_found["password"]
+            if password==password_check:
+                session["username"]=user_val
+                return redirect(url_for("Home"))
+    return render_template('login.html')
+        
 
-# ----------------------------/Login--------------------------------#
+# ----------------------------/Logout--------------------------------#
+
+@app.route("/logout", methods= ['POST', 'GET'])
+def Logout():
+    if "username" in session:
+        session.pop("username", None)
+        return render_template("login.html")
+    else:
+        return render_template("index.html")
+
 
 # ----------------------------HOME--------------------------------#
 
@@ -37,33 +67,33 @@ def Home():
 # ----------------------------ADD Prod --------------------------------#
 
 
-@app.route("/addProduct" , methods=['POST'])
+@app.route("/addProduct" , methods=['POST',"GET"])
 def AddProd():
-    # if request.method=="POST":
-    #     libelle = request.form.get("libelle")
-    #     prix = request.form.get("prix")
-    #     dateachat = request.form.get("dateachat")
-    #     #get categorie id
-    #     categorieName = request.form.get("categorie")
-    #     print("--------")
-    #     idCategorie = categorie.find_one({'denomination':categorieName})['idCategorie']
+    categories_list=db.categorie.find()
+    if request.method=="POST":
+        reference = produits.count_documents({})+1
+        libelle = request.form.get("libelle")
+        prix = request.form.get("prix")
+        dateachat = request.form.get("dateachat")
+        idCategorie = request.form.get("categorie")
 
-    #     # save picture
-    #     img = request.files["img"]
-    #     img_name = img.filename
-    #     img.save('./static/images/'+img_name)
+        # save picture
+        img = request.files["img"]
+        img_name = img.filename
+        img.save('./static/images/'+img_name)
 
-    #     newProd ={
-    #                 "libelle": libelle,
-    #                 "prixUnitaire": prix,
-    #                 "dateAchat": dateachat,
-    #                 "photoProduit": img_name,
-    #                 "idCategorie": idCategorie
-    #             }
+        newProd ={
+                    "reference" : reference,
+                    "libelle": libelle,
+                    "prixUnitaire": prix,
+                    "dateAchat": dateachat,
+                    "photoProduit": img_name,
+                    "idCategorie": idCategorie
+                }
 
-    #     x = produits.insert_one(newProd)
+        x = produits.insert_one(newProd)
         
-    return render_template("addProduct.html",title="Ajouter produit")
+    return render_template("addProduct.html",title="Ajouter produit" , categoriesList=categories_list)
 
 # ----------------------------/Update Prod--------------------------------#
 @app.route("/updateProduct/<ref>",methods=["POST","GET"])
