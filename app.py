@@ -1,5 +1,4 @@
-from unittest import result
-from flask import Flask, render_template , request, request, session, redirect, url_for
+from flask import Flask, render_template, request, request, session, redirect, url_for
 from pymongo import MongoClient
 import os
 
@@ -42,7 +41,7 @@ app.config.from_object(__name__)
 # ----------------------------Login--------------------------------#
 
 
-@app.route("/", methods= ['POST', 'GET'])
+@app.route("/", methods=['POST', 'GET'])
 def Login():
     if "username" in session:
         return redirect(url_for("Home"))
@@ -57,7 +56,8 @@ def Login():
                 session["username"]=user_val
                 return redirect(url_for("Home"))
     return render_template('login.html')
-        
+    
+
 
 # ----------------------------/Logout--------------------------------#
 
@@ -78,6 +78,8 @@ def Home():
         return render_template("index.html", title="Acceuil", produits=all_produits)
     else:
         return redirect(url_for('Login'))
+
+    
 
 # ----------------------------/HOME--------------------------------#
 
